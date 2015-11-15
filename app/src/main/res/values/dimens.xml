@@ -1,0 +1,11 @@
+<resources>
+    <dimen name="width_small">60dp</dimen>
+    <dimen name="width_medium">100dp</dimen>
+
+    <dimen name="padding_small">5dp</dimen>
+    <dimen name="padding_medium">10dp</dimen>
+    <dimen name="padding_big">20dp</dimen>
+
+    <dimen name="text_size_small">12dp</dimen>
+    <dimen name="text_size_big">14dp</dimen>
+</resources>

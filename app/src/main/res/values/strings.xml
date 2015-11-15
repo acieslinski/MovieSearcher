@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">MovieFun</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="list_searches_empty">The list of videos is empty. Use the search form to find some or change your search parameters.</string>
+
+    <string name="label_search">Search</string>
+    <string name="label_research">Re-search</string>
+    <string name="label_year">Year</string>
+    <string name="label_type">Type</string>
+
+    <string name="type_all">All</string>
+    <string name="type_movie">Movie</string>
+    <string name="type_series">Series</string>
+    <string name="type_episode">Episode</string>
+
+    <string name="page_search_form">Searches</string>
+    <string name="page_movie_list">Movies</string>
+
+    <string name="message_loader">Searching for videos...</string>
+    <string name="message_retrofit_error">Service unavailable</string>
+    <string name="message_validate_search_form_search">Search field must be provided</string>
+    <string name="message_validate_search_form_year">Year field is not correct</string>
+</resources>
