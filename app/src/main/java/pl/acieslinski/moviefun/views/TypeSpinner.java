@@ -25,11 +25,13 @@ public class TypeSpinner extends Spinner {
     }
 
     private void init() {
-        Type[] types = Type.values();
+        if (!isInEditMode()) {
+            Type[] types = Type.values();
 
-        TypesAdapter adapter = new TypesAdapter(getContext(),
-                android.R.layout.simple_spinner_item, types);
-        setAdapter(adapter);
+            TypesAdapter adapter = new TypesAdapter(getContext(),
+                    android.R.layout.simple_spinner_item, types);
+            setAdapter(adapter);
+        }
     }
 
     public Type getSelectedType() {

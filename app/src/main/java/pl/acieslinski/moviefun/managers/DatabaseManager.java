@@ -79,11 +79,16 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         return searches;
     }
 
-    public void saveSearch(Search search) {
+    public boolean saveSearch(Search search) {
+        boolean saved = false;
+
         try {
             mSearchDao.createOrUpdate(search);
+            saved = true;
         } catch (SQLException e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }
+
+        return saved;
     }
 }

@@ -24,18 +24,21 @@ public class Search {
 
     @DatabaseField(
             canBeNull = false,
+            uniqueCombo = true,
             columnName = ApplicationContract.DatabaseContract.SEARCH_FIELD_SEARCH)
     private String mSearch;
 
     @Nullable
     @DatabaseField(
             canBeNull = false,
+            uniqueCombo = true,
             columnName = ApplicationContract.DatabaseContract.SEARCH_FIELD_YEAR)
     private String mYear;
 
     @Nullable
     @DatabaseField(
             canBeNull = false,
+            uniqueCombo = true,
             columnName = ApplicationContract.DatabaseContract.SEARCH_FIELD_TYPE)
     private Type mType;
 

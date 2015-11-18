@@ -20,6 +20,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.connection.ApiAdapter;
@@ -27,6 +28,7 @@ import pl.acieslinski.moviefun.fragments.VideoList;
 import pl.acieslinski.moviefun.fragments.SearchForm;
 import pl.acieslinski.moviefun.fragments.SearchList;
 import pl.acieslinski.moviefun.models.Search;
+import pl.acieslinski.moviefun.models.SearchEvent;
 import pl.acieslinski.moviefun.models.Video;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -38,6 +40,9 @@ import retrofit.client.Response;
  */
 public class MovieFun extends AppCompatActivity {
     private static final String TAG = MovieFun.class.getSimpleName();
+    private static final int PAGE_COUNT = 2;
+    private static final int PAGE_SEARCHES = 0;
+    private static final int PAGE_VIDEOS = 1;
 
     @Bind(R.id.toolbar)
     protected Toolbar mToolbar;
@@ -59,11 +64,15 @@ public class MovieFun extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        EventBus.getDefault().register(this);
+
         setSupportActionBar(mToolbar);
 
         mApiAdapter = new ApiAdapter(this);
 
+        // TODO strategies
         if (mViewPager != null) {
+            // activity for smartphones
             mVideoList = new VideoList();
             mSearchList = new SearchList();
 
@@ -71,26 +80,29 @@ public class MovieFun extends AppCompatActivity {
 
             mTabLayout.setupWithViewPager(mViewPager);
         } else {
+            // activity for tablets
             mVideoList = (VideoList) getSupportFragmentManager().
                     findFragmentById(R.id.fg_video_list);
             mSearchList = (SearchList) getSupportFragmentManager().
                     findFragmentById(R.id.fg_search_list);
-
-            mSearchList.setOnSearchButtonClickListener(new SearchForm.OnSearchButtonClickListener() {
-                @Override
-                public void onClick(View view, final Search search, boolean validated) {
-                    if (validated) {
-                        mApiAdapter.searchMovies(search, new FetchSearchMoviesCallback());
-                    }
-                }
-            });
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(SearchEvent searchEvent) {
+        Search search = searchEvent.getSearch();
+
+        mApiAdapter.searchMovies(search, new FetchSearchMoviesCallback());
+        mViewPager.setCurrentItem(PAGE_VIDEOS);
+    }
+
     private class MoviePagerAdapter extends FragmentPagerAdapter {
-        private static final int PAGE_COUNT = 2;
-        private static final int PAGE_SEARCHES = 0;
-        private static final int PAGE_VIDEOS = 1;
 
         public MoviePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -107,7 +119,6 @@ public class MovieFun extends AppCompatActivity {
 
             switch (position) {
                 case PAGE_SEARCHES:
-                    configureSearchList(mSearchList);
                     fragment = mSearchList;
                     break;
                 case PAGE_VIDEOS:
@@ -128,7 +139,6 @@ public class MovieFun extends AppCompatActivity {
             switch (position) {
                 case PAGE_SEARCHES:
                     mSearchList = (SearchList) fragment;
-                    configureSearchList(mSearchList);
                     break;
                 case PAGE_VIDEOS:
                     mVideoList = (VideoList) fragment;
@@ -156,23 +166,6 @@ public class MovieFun extends AppCompatActivity {
             }
 
             return pageTitle;
-        }
-
-        private void configureSearchList(SearchList searchList) {
-            searchList.setOnSearchButtonClickListener(new SearchForm.OnSearchButtonClickListener() {
-                @Override
-                public void onClick(View view, final Search search, final boolean validated) {
-                    mApiAdapter.searchMovies(search, new FetchSearchMoviesCallback() {
-                        @Override
-                        public void success(List<Video> videos, Response response) {
-                            if (validated) {
-                                super.success(videos, response);
-                                mViewPager.setCurrentItem(PAGE_VIDEOS);
-                            }
-                        }
-                    });
-                }
-            });
         }
     }
 

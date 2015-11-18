@@ -13,6 +13,7 @@
 
     <EditText
         android:id="@+id/et_search"
+        android:hint="@string/hint_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
@@ -25,8 +26,10 @@
 
     <EditText
         android:id="@+id/et_year"
+        android:hint="@string/hint_year"
         android:layout_width="@dimen/width_medium"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:inputType="number"/>
 
     <TextView
         style="@style/label"

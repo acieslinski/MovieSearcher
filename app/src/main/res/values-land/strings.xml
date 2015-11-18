@@ -10,8 +10,8 @@
     <string name="label_research">Re-search</string>
     <string name="label_year">Year</string>
     <string name="label_type">Type</string>
-    <string name="hint_search">title</string>
-    <string name="hint_year">year</string>
+    <string name="hint_search">title to search</string>
+    <string name="hint_year">YYYY</string>
 
     <string name="type_all">All</string>
     <string name="type_movie">Movie</string>

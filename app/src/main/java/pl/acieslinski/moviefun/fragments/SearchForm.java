@@ -12,8 +12,10 @@ import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.models.Search;
+import pl.acieslinski.moviefun.models.SearchEvent;
 import pl.acieslinski.moviefun.views.TypeSpinner;
 
 /**
@@ -49,13 +51,11 @@ public class SearchForm extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ButterKnife.bind(this, view);
-    }
 
-    public void setOnSearchButtonClickListener(final OnSearchButtonClickListener listener) {
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                listener.onClick(view, getSearch(), validateForm());
+            public void onClick(View v) {
+                EventBus.getDefault().post(new SearchEvent(getSearch()));
             }
         });
     }
