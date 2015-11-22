@@ -26,13 +26,13 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(dir: 'libs', include: ['*.j.0.1'])
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.android.support:design:23+'
+    compile 'com.android.support:design:23.1.0'
     compile "com.android.support:recyclerview-v7:23+"
     compile 'de.greenrobot:eventbus:2.4.0'
 }

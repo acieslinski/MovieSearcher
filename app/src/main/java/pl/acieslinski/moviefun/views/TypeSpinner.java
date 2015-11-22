@@ -1,9 +1,14 @@
 package pl.acieslinski.moviefun.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import pl.acieslinski.moviefun.models.Type;
 
@@ -30,7 +35,9 @@ public class TypeSpinner extends Spinner {
 
             TypesAdapter adapter = new TypesAdapter(getContext(),
                     android.R.layout.simple_spinner_item, types);
+
             setAdapter(adapter);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         }
     }
 
@@ -49,6 +56,17 @@ public class TypeSpinner extends Spinner {
 
         public TypesAdapter(Context context, int resource, Type[] objects) {
             super(context, resource, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+
+            // makes equal padding as for EditText (padding set in styles.xml)
+            view.setPadding(0, view.getPaddingTop(), view.getPaddingRight(),
+                    view.getPaddingBottom());
+
+            return view;
         }
     }
 }

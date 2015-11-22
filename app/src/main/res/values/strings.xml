@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MovieFun</string>
+    <string name="app_name">Video searcher</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -10,13 +10,15 @@
     <string name="label_research">Re-search</string>
     <string name="label_year">Year</string>
     <string name="label_type">Type</string>
-    <string name="hint_search">title</string>
-    <string name="hint_year">year</string>
+    <string name="hint_search">title for search</string>
+    <string name="hint_year">year for search (optional)</string>
 
-    <string name="type_all">All</string>
-    <string name="type_movie">Movie</string>
-    <string name="type_series">Series</string>
-    <string name="type_episode">Episode</string>
+    <string name="type_all">search for all videos</string>
+    <string name="type_movie">search for all movies</string>
+    <string name="type_series">search for all series</string>
+    <string name="type_episode">search for all episodes</string>
+
+    <string name="details_with_year" formatted="false">%s in %s</string>
 
     <string name="page_search_form">Searches</string>
     <string name="page_movie_list">Movies</string>
@@ -25,4 +27,19 @@
     <string name="message_retrofit_error">Service unavailable</string>
     <string name="message_validate_search_form_search">Search field must be provided</string>
     <string name="message_validate_search_form_year">Year field is not correct</string>
+
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
 </resources>

@@ -24,7 +24,6 @@ import pl.acieslinski.moviefun.views.TypeSpinner;
  */
 public class SearchForm extends Fragment {
     private static final String TAG = SearchForm.class.getSimpleName();
-    private static final int YEAR_MIN = 1900;
 
     @Bind(R.id.et_search)
     protected EditText mSearchEditText;
@@ -34,10 +33,6 @@ public class SearchForm extends Fragment {
     protected TypeSpinner mTypeSpinner;
     @Bind(R.id.btn_search)
     protected Button mSearchButton;
-
-    public interface OnSearchButtonClickListener {
-        void onClick(View view, Search search, boolean validate);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

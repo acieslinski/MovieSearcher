@@ -25,8 +25,8 @@ import pl.acieslinski.moviefun.models.Search;
  */
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String TAG = DatabaseManager.class.getSimpleName();
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "skybet.db";
+    private static final int DATABASE_VERSION = 4;
+    private static final String DATABASE_NAME = "movies.db";
 
     private Dao<Search, String> mSearchDao;
 
@@ -52,7 +52,14 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource,
                           int oldVersion, int newVersion) {
-        // do nothing
+        if (oldVersion <= 4 && newVersion >= 4) {
+            try {
+                TableUtils.dropTable(connectionSource, Search.class, true);
+                TableUtils.createTable(connectionSource, Search.class);
+            } catch (SQLException e) {
+                Log.d(TAG, Log.getStackTraceString(e));
+            }
+        }
     }
 
     @Override

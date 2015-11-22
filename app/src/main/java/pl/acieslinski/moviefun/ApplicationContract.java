@@ -10,6 +10,7 @@ public interface ApplicationContract {
     interface DatabaseContract extends BaseColumns {
         String SEARCH_FIELD_SEARCH = "search";
         String SEARCH_FIELD_YEAR = "year";
+        String SEARCH_FIELD_DATE = "date";
         String SEARCH_FIELD_TYPE = "type";
     }
 }

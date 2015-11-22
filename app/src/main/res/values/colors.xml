@@ -13,6 +13,8 @@
     <color name="checked_color">#888888</color>
     <color name="text_highlight">#FFFF00</color>
     <color name="selected_color">#bfbfbf</color>
-    <color name="bright_color">#AAFFFFFF</color>
     <color name="orange_color">#f57f1b</color>
+
+    <color name="bright">#AAFFFFFF</color>
+    <color name="black">#212121</color>
 </resources>

@@ -3,7 +3,6 @@ package pl.acieslinski.moviefun.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -132,14 +134,14 @@ public class SearchList extends Fragment {
         }
 
         protected class ViewHolder extends RecyclerView.ViewHolder {
-            @Bind(R.id.tv_search)
-            protected TextView mSearchTextView;
-            @Bind(R.id.tv_year)
-            protected TextView mYearTextView;
-            @Bind(R.id.tv_type)
-            protected TextView mTypeTextView;
+            @Bind(R.id.tv_title)
+            protected TextView mTitleTextView;
+            @Bind(R.id.tv_details)
+            protected TextView mDetailsTextView;
+            @Bind(R.id.tv_date)
+            protected TextView mDateTextView;
             @Bind(R.id.btn_search)
-            protected Button mReSearchButton;
+            protected ImageButton mSearchButton;
 
             public ViewHolder(View view) {
                 super(view);
@@ -148,16 +150,35 @@ public class SearchList extends Fragment {
             }
 
             public void setSearch(final Search search) {
-                mSearchTextView.setText(search.getSearch());
-                mYearTextView.setText(search.getYear());
-                mTypeTextView.setText(search.getType().toString());
+                mTitleTextView.setText(search.getSearch());
+                mDetailsTextView.setText(search.getType().toString());
 
-                mReSearchButton.setOnClickListener(new View.OnClickListener() {
+                if (!search.getYear().isEmpty()) {
+                    String template = getResources().getString(R.string.details_with_year);
+                    String details = mDetailsTextView.getText().toString();
+                    mDetailsTextView.setText(String.format(template, details, search.getYear()));
+                }
+
+                Date date = search.getDate();
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+                String[] months = getResources().getStringArray(R.array.months);
+
+                mDateTextView.setText(day + " " + capitalize(months[month]).substring(0,3));
+
+                mSearchButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         EventBus.getDefault().post(new SearchEvent(search));
                     }
                 });
+            }
+
+            private String capitalize(final String line) {
+                return Character.toUpperCase(line.charAt(0)) + line.substring(1);
             }
         }
     }

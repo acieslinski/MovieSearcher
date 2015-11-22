@@ -7,6 +7,7 @@ import com.j256.ormlite.field.DatabaseField;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 
 import pl.acieslinski.moviefun.ApplicationContract;
 
@@ -38,6 +39,12 @@ public class Search {
     @Nullable
     @DatabaseField(
             canBeNull = false,
+            columnName = ApplicationContract.DatabaseContract.SEARCH_FIELD_DATE)
+    private Date mDate;
+
+    @Nullable
+    @DatabaseField(
+            canBeNull = false,
             uniqueCombo = true,
             columnName = ApplicationContract.DatabaseContract.SEARCH_FIELD_TYPE)
     private Type mType;
@@ -46,6 +53,7 @@ public class Search {
         mSearch = "";
         mYear = "";
         mType = Type.ALL;
+        mDate = new Date();
     }
 
     public String getSearch() {
@@ -83,5 +91,14 @@ public class Search {
 
     public void setType(Type type) {
         mType = type;
+    }
+
+    @Nullable
+    public Date getDate() {
+        return mDate;
+    }
+
+    public void setDate(Date date) {
+        mDate = date;
     }
 }

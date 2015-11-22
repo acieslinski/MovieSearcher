@@ -18,7 +18,65 @@
         <item name="android:lines">2</item>
         <item name="android:gravity">center</item>
         <item name="android:ellipsize">marquee</item>
-        <item name="android:textSize">@dimen/text_size_big</item>
-        <item name="android:background">@color/bright_color</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:background">@color/bright</item>
+    </style>
+
+    <style name="search_form_edittext">
+        <item name="android:inputType">textVisiblePassword</item>
+        <item name="android:paddingLeft">@dimen/padding_big</item>
+        <item name="android:layout_marginRight">@dimen/padding_medium</item>
+        <item name="android:layout_marginLeft">@dimen/padding_tremendous</item>
+        <item name="android:layout_marginTop">@dimen/padding_small</item>
+        <item name="android:layout_marginBottom">@dimen/padding_small</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/black</item>
+    </style>
+
+    <style name="search_form_spinner" parent="@style/Base.Widget.AppCompat.Spinner.Underlined">
+        <item name="android:paddingLeft">@dimen/padding_big</item>
+        <item name="android:layout_marginRight">@dimen/padding_medium</item>
+        <item name="android:layout_marginLeft">@dimen/padding_tremendous</item>
+        <item name="android:layout_marginTop">@dimen/padding_small</item>
+        <item name="android:layout_marginBottom">@dimen/padding_small</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/black</item>
+    </style>
+
+    <style name="search_form_button">
+        <item name="android:paddingLeft">@dimen/padding_big</item>
+        <item name="android:layout_marginRight">@dimen/padding_medium</item>
+        <item name="android:layout_marginTop">@dimen/padding_small</item>
+        <item name="android:layout_marginBottom">@dimen/padding_small</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColorHint">@color/black</item>
+        <item name="android:drawableEnd">@drawable/ic_action_search</item>
+        <item name="android:layout_gravity">end</item>
+    </style>
+
+    <style name="search_view_textview_title">
+        <item name="android:paddingTop">@dimen/padding_medium</item>
+        <item name="android:paddingLeft">@dimen/padding_medium</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
+    <style name="search_view_textview_details">
+        <item name="android:paddingLeft">@dimen/padding_medium</item>
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:scrollHorizontally">true</item>
     </style>
 </resources>

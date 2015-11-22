@@ -3,31 +3,26 @@
     android:id="@+id/ll_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <EditText
         android:id="@+id/et_search"
         android:hint="@string/hint_search"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        style="@style/search_form_edittext"/>
 
     <EditText
         android:id="@+id/et_year"
         android:hint="@string/hint_year"
-        android:layout_width="@dimen/width_small"
-        android:layout_height="wrap_content"
+        style="@style/search_form_edittext"
         android:inputType="number"/>
 
     <pl.acieslinski.moviefun.views.TypeSpinner
         android:id="@+id/sp_type"
-        android:layout_width="@dimen/width_medium"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        style="@style/search_form_spinner"/>
 
     <Button
         android:id="@+id/btn_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_search" />
+        android:text="@string/label_search"
+        style="@style/search_form_button"/>
+
 </LinearLayout>
