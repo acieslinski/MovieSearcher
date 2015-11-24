@@ -1,8 +1,8 @@
-<resources>
+<resources xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-
+        <item name="android:colorControlActivated">@color/black</item>
     </style>
 
     <style name="label">
@@ -78,5 +78,11 @@
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">marquee</item>
         <item name="android:scrollHorizontally">true</item>
+    </style>
+
+    <style name="video_list_empty">
+        <item name="android:padding">@dimen/padding_big</item>
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/grey</item>
     </style>
 </resources>

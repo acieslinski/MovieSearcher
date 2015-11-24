@@ -90,8 +90,7 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
         boolean saved = false;
 
         try {
-            mSearchDao.createOrUpdate(search);
-            saved = true;
+            saved = mSearchDao.create(search) > 0;
         } catch (SQLException e) {
             Log.e(TAG, Log.getStackTraceString(e));
         }

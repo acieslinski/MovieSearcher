@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.models.Video;
+import pl.acieslinski.moviefun.views.EmptyRecyclerView;
 
 /**
  * @author Arkadiusz Cieśliński 14.11.15.
@@ -30,7 +31,10 @@ import pl.acieslinski.moviefun.models.Video;
 
 public class VideoList extends Fragment {
     @Bind(R.id.rv_movies)
-    protected RecyclerView mRecyclerView;
+    protected EmptyRecyclerView mRecyclerView;
+    @Bind(R.id.tv_empty_list)
+    protected TextView mEmptyTextView;
+
     protected RecyclerView.Adapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
@@ -56,6 +60,7 @@ public class VideoList extends Fragment {
         ButterKnife.bind(this, view);
 
         mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setEmptyView(mEmptyTextView);
 
         int spanCount = Application.getInstance().getResources().getInteger(
                 R.integer.movies_list_span_count);

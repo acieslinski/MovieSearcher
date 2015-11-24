@@ -3,7 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="list_searches_empty">The list of videos is empty. Use the search form to find some or change your search parameters.</string>
+    <string name="list_videos_empty">The list of videos is empty. Use the search form to find some. If you used it already try some other search.</string>
 
     <!-- Search form -->
     <string name="label_search">Search</string>

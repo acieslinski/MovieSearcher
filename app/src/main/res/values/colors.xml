@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_color">#689F38</color>
+    <color name="primary_color">#689F99</color>
     <color name="primary_text_color">#FFFFFF</color>
     <color name="secondary_text_color">#212121</color>
     <color name="tertiary_text_color">#777777</color>
-    <color name="primary_green_text_color">#558B2F</color>
+    <color name="primary_green_text_color">#119F99</color>
     <color name="primary_dark_color">#537F2d</color>
     <color name="primary_accent_color">#DB4437</color>
     <color name="secondary_accent_color">#FF80AB</color>
     <color name="tertiary_accent_color">#3F51B5</color>
-    <color name="border_color">#E5E5E5</color>
     <color name="checked_color">#888888</color>
     <color name="text_highlight">#FFFF00</color>
     <color name="selected_color">#bfbfbf</color>
     <color name="orange_color">#f57f1b</color>
 
+    <color name="grey">#888888</color>
     <color name="bright">#AAFFFFFF</color>
     <color name="black">#212121</color>
 </resources>

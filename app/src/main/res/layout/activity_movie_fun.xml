@@ -8,7 +8,8 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/banner">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -18,6 +19,7 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tablayout"
+            app:tabIndicatorColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="enterAlways" />
