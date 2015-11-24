@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
@@ -50,7 +53,9 @@ public class SearchForm extends Fragment {
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new SearchEvent(getSearch()));
+                if (validateForm()) {
+                    EventBus.getDefault().post(new SearchEvent(getSearch()));
+                }
             }
         });
     }
@@ -71,38 +76,28 @@ public class SearchForm extends Fragment {
         mTypeSpinner.setSelection(search.getType());
     }
 
-    public void setReadOnlyMode(boolean readOnly) {
-        boolean enabled = !readOnly;
-
-        mSearchEditText.setEnabled(enabled);
-        mYearEditText.setEnabled(enabled);
-        mTypeSpinner.setEnabled(enabled);
-    }
-
     private boolean validateForm() {
         Search search = getSearch();
+        boolean valid = true;
 
         if (search.getSearch().isEmpty()) {
             if (isAdded()) {
-                Toast.makeText(getContext(), R.string.message_validate_search_form_search,
-                        Toast.LENGTH_LONG).show();
+                YoYo.with(Techniques.Shake).delay(300).playOn(mSearchEditText);
             }
-            return false;
+
+            valid = false;
         }
 
         if (!search.getYear().isEmpty()) {
-            // TODO make the constrain on the input
-
             if (!(search.getYear().matches("\\d{4}"))) {
                 if (isAdded()) {
-                    Toast.makeText(getContext(), R.string.message_validate_search_form_year,
-                            Toast.LENGTH_LONG).show();
+                    YoYo.with(Techniques.Shake).delay(300).playOn(mYearEditText);
                 }
 
-                return false;
+                valid = false;
             }
         }
 
-        return true;
+        return valid;
     }
 }
