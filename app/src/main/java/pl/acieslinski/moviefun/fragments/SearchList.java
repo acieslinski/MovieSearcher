@@ -1,6 +1,8 @@
 package pl.acieslinski.moviefun.fragments;
 
+import android.app.Service;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,8 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,11 +25,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.models.Search;
 import pl.acieslinski.moviefun.models.SearchEvent;
+import pl.acieslinski.moviefun.utilities.SoftKeyboard;
 
 /**
  * @author Arkadiusz Cieśliński 14.11.15.
@@ -33,11 +37,16 @@ import pl.acieslinski.moviefun.models.SearchEvent;
  */
 
 public class SearchList extends Fragment {
+    private static final int ANIMATION_INSERT_DURATION = 1000; // 1 second
+
     protected SearchForm mSearchForm;
+    @Bind(R.id.ll_container)
+    protected LinearLayout mContainerLinearLayout;
     @Bind(R.id.rv_searches)
     protected RecyclerView mSearchesRecyclerView;
     protected SearchesAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
+    protected SoftKeyboard mSoftKeyboard;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,21 +76,38 @@ public class SearchList extends Fragment {
         mLayoutManager = new LinearLayoutManager(view.getContext());
         mSearchesRecyclerView.setLayoutManager(mLayoutManager);
         mSearchesRecyclerView.setAdapter(mAdapter);
-        mSearchesRecyclerView.setItemAnimator(new SlideInLeftAnimator());
+        mSearchesRecyclerView.getItemAnimator().setAddDuration(ANIMATION_INSERT_DURATION);
+
+        InputMethodManager inputMethodManager = (InputMethodManager) Application.getInstance().
+                getApplicationContext().getSystemService(Service.INPUT_METHOD_SERVICE);
+        mSoftKeyboard = new SoftKeyboard(mContainerLinearLayout, inputMethodManager);
     }
 
     private final View.OnClickListener mSearchButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (mSearchForm.validateForm()) {
-                Search search = mSearchForm.getSearch();
+                mSoftKeyboard.closeSoftKeyboard(new SoftKeyboard.SoftKeyboardHideCallback() {
+                    @Override
+                    public void onSoftKeyboardHide() {
+                        final Search search = mSearchForm.getSearch();
 
-                // TODO execute in background thread
-                if (Application.getInstance().getDatabaseManager().saveSearch(search)) {
-                    mAdapter.insert(search, 0);
-                }
+                        // TODO execute in background thread
+                        if (Application.getInstance().getDatabaseManager().saveSearch(search)) {
+                            mLayoutManager.smoothScrollToPosition(mSearchesRecyclerView, null, 0);
+                            mAdapter.insert(search, 0);
 
-                //EventBus.getDefault().post(new SearchEvent(search));
+                            mSearchesRecyclerView.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    EventBus.getDefault().post(new SearchEvent(search));
+                                }
+                            }, ANIMATION_INSERT_DURATION);
+                        } else {
+                            EventBus.getDefault().post(new SearchEvent(sea
+                        }
+                    }
+                });
             }
         }
     };

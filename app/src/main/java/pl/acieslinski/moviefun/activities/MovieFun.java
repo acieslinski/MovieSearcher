@@ -175,7 +175,6 @@ public class MovieFun extends AppCompatActivity {
         public void success(List<Video> videos, Response response) {
             // TODO loading indicator
             mVideoList.setVideos(videos);
-            hideSoftKeyboard();
         }
 
         @Override
@@ -183,17 +182,6 @@ public class MovieFun extends AppCompatActivity {
             Toast.makeText(MovieFun.this, R.string.message_retrofit_error,
                     Toast.LENGTH_LONG).show();
             Log.e(TAG, Log.getStackTraceString(error));
-        }
-
-        private void hideSoftKeyboard() {
-            InputMethodManager inputManager = (InputMethodManager) getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-            View view = getCurrentFocus();
-
-            if (view != null) {
-                inputManager.hideSoftInputFromWindow(view.getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
-            }
         }
     }
 }

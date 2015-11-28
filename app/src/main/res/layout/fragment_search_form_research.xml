@@ -27,8 +27,7 @@
                 android:layout_weight="1"
                 style="@style/search_view_textview_title"
                 android:paddingLeft="@dimen/padding_medium"
-                android:layout_height="match_parent"
-                android:text="Bond"/>
+                android:layout_height="match_parent"/>
 
             <ImageButton
                 android:id="@+id/btn_search"
@@ -40,7 +39,6 @@
         <TextView
             android:id="@+id/tv_details"
             style="@style/search_view_textview_details"
-            android:text="search for all videos in 1999"
             android:paddingLeft="@dimen/padding_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

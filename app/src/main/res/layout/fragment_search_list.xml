@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<LinearLayout android:id="@+id/ll_container"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
     <fragment
         android:id="@+id/fg_search_form"
         android:name="pl.acieslinski.moviefun.fragments.SearchForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout="@layout/fragment_search_form" />
+        tools:layout="@layout/fragment_search_form"/>
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="@dimen/padding_medium" />
+        android:layout_height="@dimen/padding_medium"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_searches"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="10dp"
-
         android:background="@color/primary_text_color"
-        android:scrollbars="vertical" />
+
+        android:elevation="10dp"
+        android:scrollbars="vertical"/>
 
 </LinearLayout>
