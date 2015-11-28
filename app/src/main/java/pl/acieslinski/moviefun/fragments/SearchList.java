@@ -104,7 +104,7 @@ public class SearchList extends Fragment {
                                 }
                             }, ANIMATION_INSERT_DURATION);
                         } else {
-                            EventBus.getDefault().post(new SearchEvent(sea
+                            EventBus.getDefault().post(new SearchEvent(search));
                         }
                     }
                 });
