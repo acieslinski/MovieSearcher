@@ -21,6 +21,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.models.Search;
@@ -47,20 +48,6 @@ public class SearchList extends Fragment {
         mAdapter = new SearchesAdapter(searches);
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        EventBus.getDefault().unregister(this);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,20 +62,29 @@ public class SearchList extends Fragment {
         ButterKnife.bind(this, view);
 
         mSearchForm = (SearchForm) getChildFragmentManager().findFragmentById(R.id.fg_search_form);
+        mSearchForm.setOnSearchButtonClickListener(mSearchButtonClickListener);
 
         mLayoutManager = new LinearLayoutManager(view.getContext());
         mSearchesRecyclerView.setLayoutManager(mLayoutManager);
-
         mSearchesRecyclerView.setAdapter(mAdapter);
+        mSearchesRecyclerView.setItemAnimator(new SlideInLeftAnimator());
     }
 
-    public void onEventBackgroundThread(SearchEvent searchEvent) {
-        Search search = searchEvent.getSearch();
+    private final View.OnClickListener mSearchButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mSearchForm.validateForm()) {
+                Search search = mSearchForm.getSearch();
 
-        if (Application.getInstance().getDatabaseManager().saveSearch(search)) {
-            mAdapter.insert(search, 0);
+                // TODO execute in background thread
+                if (Application.getInstance().getDatabaseManager().saveSearch(search)) {
+                    mAdapter.insert(search, 0);
+                }
+
+                //EventBus.getDefault().post(new SearchEvent(search));
+            }
         }
-    }
+    };
 
     protected class SearchesAdapter extends RecyclerView.Adapter<SearchesAdapter.ViewHolder> {
         private List<Search> mSearches;
@@ -120,14 +116,14 @@ public class SearchList extends Fragment {
             return mSearches.size();
         }
 
-        public void insert(Search search, int position) {
+        public void insert(Search search, final int position) {
             mSearches.add(position, search);
 
             if (isAdded()) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        notifyDataSetChanged();
+                        notifyItemInserted(position);
                     }
                 });
             }
@@ -167,7 +163,7 @@ public class SearchList extends Fragment {
                 int day = calendar.get(Calendar.DAY_OF_MONTH);
                 String[] months = getResources().getStringArray(R.array.months);
 
-                mDateTextView.setText(day + " " + capitalize(months[month]).substring(0,3));
+                mDateTextView.setText(day + " " + capitalize(months[month]).substring(0, 3));
 
                 mSearchButton.setOnClickListener(new View.OnClickListener() {
                     @Override

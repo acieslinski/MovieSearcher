@@ -49,15 +49,10 @@ public class SearchForm extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ButterKnife.bind(this, view);
+    }
 
-        mSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validateForm()) {
-                    EventBus.getDefault().post(new SearchEvent(getSearch()));
-                }
-            }
-        });
+    public void setOnSearchButtonClickListener(View.OnClickListener listener) {
+        mSearchButton.setOnClickListener(listener);
     }
 
     public Search getSearch() {
@@ -76,7 +71,7 @@ public class SearchForm extends Fragment {
         mTypeSpinner.setSelection(search.getType());
     }
 
-    private boolean validateForm() {
+    public boolean validateForm() {
         Search search = getSearch();
         boolean valid = true;
 
