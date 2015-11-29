@@ -26,7 +26,7 @@ import pl.acieslinski.moviefun.models.Search;
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String TAG = DatabaseManager.class.getSimpleName();
     private static final int DATABASE_VERSION = 4;
-    private static final String DATABASE_NAME = "movies.db";
+    private static final String DATABASE_NAME = "videos.db";
 
     private Dao<Search, String> mSearchDao;
 

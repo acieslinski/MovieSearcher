@@ -42,6 +42,6 @@ public interface Api {
     class Search {
         @Nullable
         @SerializedName(value = Api.FIELD_SEARCH)
-        public Video[] movies;
+        public Video[] videos;
     }
 }

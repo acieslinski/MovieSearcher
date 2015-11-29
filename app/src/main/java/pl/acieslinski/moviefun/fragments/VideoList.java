@@ -1,17 +1,21 @@
 package pl.acieslinski.moviefun.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -19,10 +23,17 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
+import pl.acieslinski.moviefun.connection.ApiAdapter;
+import pl.acieslinski.moviefun.models.Search;
+import pl.acieslinski.moviefun.models.SearchEvent;
 import pl.acieslinski.moviefun.models.Video;
 import pl.acieslinski.moviefun.views.EmptyRecyclerView;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import rx.functions.Action1;
 
 /**
  * @author Arkadiusz Cieśliński 14.11.15.
@@ -35,7 +46,7 @@ public class VideoList extends Fragment {
     @Bind(R.id.tv_empty_list)
     protected TextView mEmptyTextView;
 
-    protected RecyclerView.Adapter mAdapter;
+    protected VideosAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
 
     @Override
@@ -44,7 +55,21 @@ public class VideoList extends Fragment {
 
         setRetainInstance(true);
 
-        mAdapter = new MoviesAdapter();
+        mAdapter = new VideosAdapter();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        EventBus.getDefault().unregister(this);
     }
 
     @Nullable
@@ -71,24 +96,34 @@ public class VideoList extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    public void setVideos(List<Video> videos) {
-        mAdapter = new MoviesAdapter(videos);
-        mRecyclerView.setAdapter(mAdapter);
+    protected void onEventMainThread(SearchEvent searchEvent) {
+        Search search = searchEvent.getSearch();
+
+        if (isAdded()) {
+            ApiAdapter apiAdapter = new ApiAdapter(getActivity());
+
+            apiAdapter.searchMovies(search).doOnNext(new Action1<Video>() {
+                @Override
+                public void call(Video video) {
+                    mAdapter.add(video);
+                }
+            });
+        }
     }
 
-    protected class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+    protected class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.ViewHolder> {
         private List<Video> mVideos;
 
-        public MoviesAdapter() {
+        public VideosAdapter() {
             mVideos = new ArrayList();
         }
 
-        public MoviesAdapter(List<Video> videos) {
+        public VideosAdapter(List<Video> videos) {
             mVideos = videos;
         }
 
         @Override
-        public MoviesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public VideosAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.fragment_video_list_item, parent, false);
             return new ViewHolder(v);
@@ -103,6 +138,19 @@ public class VideoList extends Fragment {
         @Override
         public int getItemCount() {
             return mVideos.size();
+        }
+
+        public void add(final Video video) {
+            mVideos.add(video);
+
+            if (isAdded()) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyItemInserted(mVideos.indexOf(video));
+                    }
+                });
+            }
         }
 
         protected class ViewHolder extends RecyclerView.ViewHolder {
@@ -120,18 +168,8 @@ public class VideoList extends Fragment {
             public void setVideo(Video video) {
                 mTitleTextView.setText(video.getTitle());
 
-                Picasso.with(getContext()).load(video.getPosterLink()).into(mPosterImageView,
-                        new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                // do nothing
-                            }
-
-                            @Override
-                            public void onError() {
-                                mPosterImageView.setImageResource(R.drawable.nopreview);
-                            }
-                        });
+                Picasso.with(getContext()).load(video.getPosterLink()).networkPolicy(
+                        NetworkPolicy.OFFLINE).into(mPosterImageView);
             }
         }
     }

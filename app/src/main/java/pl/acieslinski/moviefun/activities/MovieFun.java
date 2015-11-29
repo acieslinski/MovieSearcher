@@ -54,7 +54,6 @@ public class MovieFun extends AppCompatActivity {
     protected TabLayout mTabLayout;
 
     private VideoList mVideoList;
-    private ApiAdapter mApiAdapter;
     private SearchList mSearchList;
 
     @Override
@@ -67,8 +66,6 @@ public class MovieFun extends AppCompatActivity {
         EventBus.getDefault().register(this);
 
         setSupportActionBar(mToolbar);
-
-        mApiAdapter = new ApiAdapter(this);
 
         // TODO strategies
         if (mViewPager != null) {
@@ -95,10 +92,8 @@ public class MovieFun extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    public void onEventMainThread(SearchEvent searchEvent) {
-        Search search = searchEvent.getSearch();
-
-        mApiAdapter.searchMovies(search, new FetchSearchMoviesCallback());
+    protected void onEventMainThread(SearchEvent searchEvent) {
+        // TODO use proper strategy
         mViewPager.setCurrentItem(PAGE_VIDEOS);
     }
 
@@ -166,22 +161,6 @@ public class MovieFun extends AppCompatActivity {
             }
 
             return pageTitle;
-        }
-    }
-
-    private class FetchSearchMoviesCallback implements Callback<List<Video>> {
-
-        @Override
-        public void success(List<Video> videos, Response response) {
-            // TODO loading indicator
-            mVideoList.setVideos(videos);
-        }
-
-        @Override
-        public void failure(RetrofitError error) {
-            Toast.makeText(MovieFun.this, R.string.message_retrofit_error,
-                    Toast.LENGTH_LONG).show();
-            Log.e(TAG, Log.getStackTraceString(error));
         }
     }
 }
