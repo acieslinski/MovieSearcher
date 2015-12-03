@@ -1,13 +1,10 @@
 package pl.acieslinski.moviefun.connection;
 
 import android.support.annotation.Nullable;
-import android.webkit.GeolocationPermissions;
 
 import com.google.gson.annotations.SerializedName;
 
-import pl.acieslinski.moviefun.models.Search;
 import pl.acieslinski.moviefun.models.Video;
-import retrofit.Callback;
 import retrofit.http.GET;
 import retrofit.http.Query;
 
@@ -36,10 +33,10 @@ public interface Api {
 
 
     @GET(QUERY_GET_MOVIES)
-    void searchMovies(@Query(QUERY_SEARCH) String search, @Query(QUERY_YEAR) String year,
-                        @Query(QUERY_TYPE) String type, Callback<Search> callback);
+    SearchResult searchMovies(@Query(QUERY_SEARCH) String search, @Query(QUERY_YEAR) String year,
+                        @Query(QUERY_TYPE) String type);
 
-    class Search {
+    class SearchResult {
         @Nullable
         @SerializedName(value = Api.FIELD_SEARCH)
         public Video[] videos;

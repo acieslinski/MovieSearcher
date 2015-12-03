@@ -5,7 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="list_searches_empty">The list of videos is empty. Use the search form to find some or change your search parameters.</string>
 
-    <!-- Search form -->
+    <!-- SearchResult form -->
     <string name="label_search">Search</string>
     <string name="label_research">Re-search</string>
     <string name="label_year">Year</string>

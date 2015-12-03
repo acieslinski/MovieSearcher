@@ -33,7 +33,10 @@ import pl.acieslinski.moviefun.models.Video;
 import pl.acieslinski.moviefun.views.EmptyRecyclerView;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 /**
  * @author Arkadiusz Cieśliński 14.11.15.
@@ -96,18 +99,21 @@ public class VideoList extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    protected void onEventMainThread(SearchEvent searchEvent) {
+    public void onEventBackgroundThread(SearchEvent searchEvent) {
         Search search = searchEvent.getSearch();
 
         if (isAdded()) {
             ApiAdapter apiAdapter = new ApiAdapter(getActivity());
 
-            apiAdapter.searchMovies(search).doOnNext(new Action1<Video>() {
-                @Override
-                public void call(Video video) {
-                    mAdapter.add(video);
-                }
-            });
+            apiAdapter.searchMovies(search)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext(new Action1<Video>() {
+                        @Override
+                        public void call(Video video) {
+                            mAdapter.add(video);
+                        }
+                    })
+                    .subscribe();
         }
     }
 
@@ -144,12 +150,7 @@ public class VideoList extends Fragment {
             mVideos.add(video);
 
             if (isAdded()) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyItemInserted(mVideos.indexOf(video));
-                    }
-                });
+                notifyItemInserted(mVideos.indexOf(video));
             }
         }
 

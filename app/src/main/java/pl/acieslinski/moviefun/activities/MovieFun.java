@@ -92,7 +92,7 @@ public class MovieFun extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    protected void onEventMainThread(SearchEvent searchEvent) {
+    public void onEventMainThread(SearchEvent searchEvent) {
         // TODO use proper strategy
         mViewPager.setCurrentItem(PAGE_VIDEOS);
     }
