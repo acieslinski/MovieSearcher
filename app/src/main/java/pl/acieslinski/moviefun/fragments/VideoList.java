@@ -126,6 +126,8 @@ public class VideoList extends Fragment {
                 mProgressDialog.show();
             }
 
+            mAdapter.clear();
+
             apiAdapter.searchMovies(search)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.newThread())
@@ -183,6 +185,11 @@ public class VideoList extends Fragment {
             if (isAdded()) {
                 notifyItemInserted(mVideos.indexOf(video));
             }
+        }
+
+        public void clear() {
+            mVideos.clear();
+            notifyDataSetChanged();
         }
 
         protected class ViewHolder extends RecyclerView.ViewHolder {
