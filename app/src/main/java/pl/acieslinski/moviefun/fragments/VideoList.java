@@ -38,6 +38,7 @@ import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -131,6 +132,12 @@ public class VideoList extends Fragment {
             apiAdapter.searchMovies(search)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.newThread())
+                    .filter(new Func1<Video, Boolean>() {
+                        @Override
+                        public Boolean call(Video video) {
+                            return video.isPosterAvailable();
+                        }
+                    })
                     .doOnNext(new Action1<Video>() {
                         @Override
                         public void call(Video video) {

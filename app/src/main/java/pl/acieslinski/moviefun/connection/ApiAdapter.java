@@ -16,7 +16,6 @@ import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.models.Search;
 import pl.acieslinski.moviefun.models.Video;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
 import rx.Observable;
 import rx.Subscriber;
 
@@ -121,16 +120,17 @@ public class ApiAdapter {
                         .fetch(new com.squareup.picasso.Callback() {
                             @Override
                             public void onSuccess() {
-                                onCompleted();
+                                onTerminated();
+                                video.setIsPosterAvailable(true);
                             }
 
                             @Override
                             public void onError() {
                                 // poster for this video is not available - ignore it
-                                onCompleted();
+                                onTerminated();
                             }
 
-                            public void onCompleted() {
+                            public void onTerminated() {
                                 subscriber.onNext(video);
                                 loaderLatch.countDown();
                             }
