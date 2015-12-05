@@ -1,5 +1,6 @@
 package pl.acieslinski.moviefun.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,6 +36,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -48,6 +50,9 @@ public class VideoList extends Fragment {
     protected EmptyRecyclerView mRecyclerView;
     @Bind(R.id.tv_empty_list)
     protected TextView mEmptyTextView;
+    protected ProgressDialog mProgressDialog;
+
+    private boolean isLoadingState;
 
     protected VideosAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
@@ -59,20 +64,6 @@ public class VideoList extends Fragment {
         setRetainInstance(true);
 
         mAdapter = new VideosAdapter();
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-        EventBus.getDefault().unregister(this);
     }
 
     @Nullable
@@ -97,20 +88,60 @@ public class VideoList extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mRecyclerView.setAdapter(mAdapter);
+
+        if (isLoadingState) {
+            mProgressDialog.show();
+        }
     }
 
-    public void onEventBackgroundThread(SearchEvent searchEvent) {
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        mProgressDialog = new ProgressDialog(context);
+        mProgressDialog.setMessage(getResources().getString(R.string.message_loader));
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setIndeterminate(true);
+
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        mProgressDialog = null;
+
+        EventBus.getDefault().unregister(this);
+    }
+
+    public void onEventMainThread(SearchEvent searchEvent) {
         Search search = searchEvent.getSearch();
 
         if (isAdded()) {
             ApiAdapter apiAdapter = new ApiAdapter(getActivity());
 
+            isLoadingState = true;
+            if (null != mProgressDialog) {
+                mProgressDialog.show();
+            }
+
             apiAdapter.searchMovies(search)
                     .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.newThread())
                     .doOnNext(new Action1<Video>() {
                         @Override
                         public void call(Video video) {
                             mAdapter.add(video);
+                        }
+                    })
+                    .doOnCompleted(new Action0() {
+                        @Override
+                        public void call() {
+                            if (null != mProgressDialog) {
+                                mProgressDialog.hide();
+                            }
+                            isLoadingState = false;
                         }
                     })
                     .subscribe();
