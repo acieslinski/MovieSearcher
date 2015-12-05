@@ -28,12 +28,15 @@ public class Video {
     @SerializedName(value = Api.FIELD_POSTER)
     private String mPosterLink;
 
+    private boolean mIsPosterAvailable;
+
     public Video() {
         mTitle = "";
         mRuntime = "";
         mPlot = "";
         mPosterLink = "";
         mGenre = "";
+        mIsPosterAvailable = false;
         mYear = Integer.toString(Calendar.getInstance().get(Calendar.YEAR));
     }
 
@@ -83,5 +86,13 @@ public class Video {
 
     public void setPosterLink(String posterLink) {
         mPosterLink = posterLink;
+    }
+
+    public boolean isPosterAvailable() {
+        return mIsPosterAvailable;
+    }
+
+    public void setIsPosterAvailable(boolean isPosterAvailable) {
+        mIsPosterAvailable = isPosterAvailable;
     }
 }
