@@ -50,12 +50,10 @@ public class ApiAdapter {
     }
 
     /**
-     * // TODO add doc to the {@link #searchMovies(Search)}
-     *
-     * @param search
-     * @return
+     * Sends query for provided {@link Search} and returns an observer for the results (videos). It
+     * also warms up the cache with poster's images. It calls {Subscriber#onNext} when video's
+     * data is fetched with the poster image.
      */
-
     @WorkerThread
     public Observable<Video> searchMovies(final Search search) {
         return Observable
@@ -71,6 +69,10 @@ public class ApiAdapter {
                 });
     }
 
+    /**
+     * Sends query for provided {@link Search}. It also warms up the cache with poster's images.
+     * It calls {Subscriber#onNext} when video's data is fetched with the poster image.
+     */
     @WorkerThread
     private void searchMovies(Search search, final Subscriber<? super Video> subscriber) {
         Api.SearchResult searchResult = mApiAdapter.searchMovies(
