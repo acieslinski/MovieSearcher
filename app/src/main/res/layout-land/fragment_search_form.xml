@@ -1,51 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+<LinearLayout android:id="@+id/ll_container"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:paddingTop="@dimen/padding_medium">
 
     <TextView
         style="@style/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/label_search" />
+        android:text="@string/label_search"/>
 
     <EditText
         android:id="@+id/et_search"
-        android:hint="@string/hint_search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:hint="@string/hint_search"/>
 
     <TextView
         style="@style/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/label_year" />
+        android:text="@string/label_year"/>
 
     <EditText
         android:id="@+id/et_year"
-        android:hint="@string/hint_year"
         android:layout_width="@dimen/width_medium"
         android:layout_height="wrap_content"
+        android:hint="@string/hint_year"
         android:inputType="number"/>
 
     <TextView
         style="@style/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/label_type" />
+        android:text="@string/label_type"/>
 
     <pl.acieslinski.moviefun.views.TypeSpinner
         android:id="@+id/sp_type"
         android:layout_width="@dimen/width_medium"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"/>
 
     <Button
         android:id="@+id/btn_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/label_search" />
+        android:text="@string/label_search"/>
 </LinearLayout>

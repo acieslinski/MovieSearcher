@@ -20,11 +20,6 @@ package pl.acieslinski.moviefun.utilities;
  * Israel Dominguez (dominguez.israel@gmail.com)
  */
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -32,6 +27,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SoftKeyboard implements View.OnFocusChangeListener {
     private static final int CLEAR_FOCUS = 0;

@@ -14,8 +14,6 @@
 
 package pl.acieslinski.moviefun.models;
 
-import android.content.res.Resources;
-
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
 

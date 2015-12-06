@@ -14,7 +14,7 @@
 
 package pl.acieslinski.moviefun.activities;
 
-import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -22,42 +22,31 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
-import pl.acieslinski.moviefun.connection.ApiAdapter;
-import pl.acieslinski.moviefun.fragments.VideoList;
-import pl.acieslinski.moviefun.fragments.SearchForm;
 import pl.acieslinski.moviefun.fragments.SearchList;
-import pl.acieslinski.moviefun.models.Search;
+import pl.acieslinski.moviefun.fragments.VideoList;
 import pl.acieslinski.moviefun.models.SearchEvent;
-import pl.acieslinski.moviefun.models.Video;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * @author Arkadiusz Cieśliński 14.11.15.
  *         <acieslinski@gmail.com>
  */
 public class MovieFun extends AppCompatActivity {
-    private static final String TAG = MovieFun.class.getSimpleName();
     private static final int PAGE_COUNT = 2;
-    private static final int PAGE_SEARCHES = 0;
     private static final int PAGE_VIDEOS = 1;
+    private static final int PAGE_SEARCHES = 0;
+    private static final String VIEW_CONVENIENT = "convenient-view";
+    private static final String VIEW_COMPACT = "compact-view";
 
+    @Bind(R.id.container)
+    protected ViewGroup mContainer;
     @Bind(R.id.toolbar)
     protected Toolbar mToolbar;
     @Nullable
@@ -69,6 +58,7 @@ public class MovieFun extends AppCompatActivity {
 
     private VideoList mVideoList;
     private SearchList mSearchList;
+    private ViewStrategy mViewStrategy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,22 +71,17 @@ public class MovieFun extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
 
-        // TODO strategies
-        if (mViewPager != null) {
-            // activity for smartphones
-            mVideoList = new VideoList();
-            mSearchList = new SearchList();
+        String type = (String) mContainer.getTag();
 
-            mViewPager.setAdapter(new MoviePagerAdapter(getSupportFragmentManager()));
-
-            mTabLayout.setupWithViewPager(mViewPager);
-        } else {
-            // activity for tablets
-            mVideoList = (VideoList) getSupportFragmentManager().
-                    findFragmentById(R.id.fg_video_list);
-            mSearchList = (SearchList) getSupportFragmentManager().
-                    findFragmentById(R.id.fg_search_list);
+        if (VIEW_CONVENIENT.equals(type)) {
+            mViewStrategy = new ConvenientView();
         }
+
+        if (VIEW_COMPACT.equals(type)) {
+            mViewStrategy = new CompactView();
+        }
+
+        mViewStrategy.onCreate();
     }
 
     @Override
@@ -107,8 +92,7 @@ public class MovieFun extends AppCompatActivity {
     }
 
     public void onEventMainThread(SearchEvent searchEvent) {
-        // TODO use proper strategy
-        mViewPager.setCurrentItem(PAGE_VIDEOS);
+        mViewStrategy.handleSearchEvent();
     }
 
     private class MoviePagerAdapter extends FragmentPagerAdapter {
@@ -144,7 +128,7 @@ public class MovieFun extends AppCompatActivity {
         public Object instantiateItem(ViewGroup container, int position) {
             Fragment fragment = (Fragment) super.instantiateItem(container, position);
 
-            // retrive the instantiated fragments (after configuration changes)
+            // retrieve the instantiated fragments (after configuration changes)
             switch (position) {
                 case PAGE_SEARCHES:
                     mSearchList = (SearchList) fragment;
@@ -175,6 +159,45 @@ public class MovieFun extends AppCompatActivity {
             }
 
             return pageTitle;
+        }
+    }
+
+    private interface ViewStrategy {
+        void onCreate();
+        void handleSearchEvent();
+    }
+
+    private class ConvenientView implements ViewStrategy {
+
+        @Override
+        public void onCreate() {
+            mVideoList = new VideoList();
+            mSearchList = new SearchList();
+
+            mViewPager.setAdapter(new MoviePagerAdapter(getSupportFragmentManager()));
+
+            mTabLayout.setupWithViewPager(mViewPager);
+        }
+
+        @Override
+        public void handleSearchEvent() {
+            mViewPager.setCurrentItem(PAGE_VIDEOS);
+        }
+    }
+
+    private class CompactView implements ViewStrategy {
+
+        @Override
+        public void onCreate() {
+            mVideoList = (VideoList) getSupportFragmentManager().
+                    findFragmentById(R.id.fg_video_list);
+            mSearchList = (SearchList) getSupportFragmentManager().
+                    findFragmentById(R.id.fg_search_list);
+        }
+
+        @Override
+        public void handleSearchEvent() {
+            // do nothing
         }
     }
 }

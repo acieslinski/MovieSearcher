@@ -22,15 +22,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -47,9 +44,6 @@ import pl.acieslinski.moviefun.models.Search;
 import pl.acieslinski.moviefun.models.SearchEvent;
 import pl.acieslinski.moviefun.models.Video;
 import pl.acieslinski.moviefun.views.EmptyRecyclerView;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.functions.Action1;

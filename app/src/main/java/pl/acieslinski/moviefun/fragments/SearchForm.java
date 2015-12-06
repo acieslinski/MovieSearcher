@@ -22,17 +22,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.models.Search;
-import pl.acieslinski.moviefun.models.SearchEvent;
 import pl.acieslinski.moviefun.views.TypeSpinner;
 
 /**
