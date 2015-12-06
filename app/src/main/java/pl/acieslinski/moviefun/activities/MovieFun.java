@@ -14,7 +14,6 @@
 
 package pl.acieslinski.moviefun.activities;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -24,7 +23,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,8 +47,9 @@ public class MovieFun extends AppCompatActivity {
     private static final String VIEW_CONVENIENT = "convenient-view";
     private static final String VIEW_COMPACT = "compact-view";
 
-    @Bind(R.id.container)
-    protected ViewGroup mContainer;
+
+    @Bind(R.id.fl_container)
+    protected FrameLayout mContainer;
     @Bind(R.id.toolbar)
     protected Toolbar mToolbar;
     @Nullable
@@ -91,6 +93,7 @@ public class MovieFun extends AppCompatActivity {
 
         EventBus.getDefault().unregister(this);
     }
+
 
     public void onEventMainThread(SearchEvent searchEvent) {
         mViewStrategy.handleSearchEvent();

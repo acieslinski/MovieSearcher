@@ -1,38 +1,51 @@
-<LinearLayout
+<FrameLayout
+    android:id="@+id/fl_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:tag="compact-view"
-    android:saveEnabled="false"
-    tools:context=".MovieFun">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_scrollFlags="scroll|enterAlways" />
+    android:tag="compact-view">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:saveEnabled="false"
+        android:tag="compact-view"
+        tools:context=".MovieFun">
 
-        <fragment
-            android:id="@+id/fg_search_list"
-            android:name="pl.acieslinski.moviefun.fragments.SearchList"
-            android:layout_width="500dp"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_search_list" />
-
-        <fragment
-            android:id="@+id/fg_video_list"
-            android:name="pl.acieslinski.moviefun.fragments.VideoList"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:layout="@layout/fragment_video_list" />
+            app:layout_scrollFlags="scroll|enterAlways"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <fragment
+                android:id="@+id/fg_search_list"
+                android:name="pl.acieslinski.moviefun.fragments.SearchList"
+                android:layout_width="500dp"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_search_list"/>
+
+            <fragment
+                android:id="@+id/fg_video_list"
+                android:name="pl.acieslinski.moviefun.fragments.VideoList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/fragment_video_list"/>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>
