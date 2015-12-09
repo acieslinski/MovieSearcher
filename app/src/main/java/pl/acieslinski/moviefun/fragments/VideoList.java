@@ -55,7 +55,7 @@ import rx.schedulers.Schedulers;
  *         <acieslinski@gmail.com>
  */
 
-public class VideoList extends Fragment {
+public class VideoList extends PortableFragment {
     @Bind(R.id.rv_movies)
     protected EmptyRecyclerView mRecyclerView;
     @Bind(R.id.tv_empty_list)

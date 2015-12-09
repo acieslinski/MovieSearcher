@@ -20,12 +20,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,6 +50,8 @@ public class MovieFun extends AppCompatActivity {
     private static final int PAGE_SEARCHES = 0;
     private static final String VIEW_CONVENIENT = "convenient-view";
     private static final String VIEW_COMPACT = "compact-view";
+    private static final String TAG_FRAGMENT_SEARCHES = "search-list";
+    private static final String TAG_FRAGMENT_VIDEOS = "video-list";
 
 
     @Bind(R.id.fl_container)
@@ -59,9 +65,8 @@ public class MovieFun extends AppCompatActivity {
     @Bind(R.id.tablayout)
     protected TabLayout mTabLayout;
 
-    private VideoList mVideoList;
-    private SearchList mSearchList;
     private ViewStrategy mViewStrategy;
+    private FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,15 +79,11 @@ public class MovieFun extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
 
-        String type = (String) mContainer.getTag();
+        mFragmentManager = getSupportFragmentManager();
 
-        if (VIEW_CONVENIENT.equals(type)) {
-            mViewStrategy = new ConvenientView();
-        }
+        mViewPager.setAdapter(new MoviePagerAdapter(getSupportFragmentManager()));
 
-        if (VIEW_COMPACT.equals(type)) {
-            mViewStrategy = new CompactView();
-        }
+        mViewStrategy = instantiateViewStrategy();
 
         mViewStrategy.onCreate();
     }
@@ -116,10 +117,10 @@ public class MovieFun extends AppCompatActivity {
 
             switch (position) {
                 case PAGE_SEARCHES:
-                    fragment = mSearchList;
+                    fragment = new SearchList();
                     break;
                 case PAGE_VIDEOS:
-                    fragment = mVideoList;
+                    fragment = new VideoList();
                     break;
                 default:
                     fragment = new Fragment();
@@ -130,19 +131,20 @@ public class MovieFun extends AppCompatActivity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            FragmentTransaction transaction = mFragmentManager.beginTransaction();
 
-            // retrieve the instantiated fragments (after configuration changes)
-            switch (position) {
-                case PAGE_SEARCHES:
-                    mSearchList = (SearchList) fragment;
-                    break;
-                case PAGE_VIDEOS:
-                    mVideoList = (VideoList) fragment;
-                    break;
-                default:
-                    // do nothing
+            String tag = getFragmentTag(position);
+
+            Fragment fragment = mFragmentManager.findFragmentByTag(tag);
+
+            if (fragment != null) {
+                transaction.attach(fragment);
+            } else {
+                fragment = getItem(position);
+                transaction.add(container.getId(), fragment, tag);
             }
+
+            transaction.commit();
 
             return fragment;
         }
@@ -153,10 +155,10 @@ public class MovieFun extends AppCompatActivity {
 
             switch (position) {
                 case PAGE_SEARCHES:
-                    pageTitle = Application.getInstance().getString(R.string.page_search_form);
+                    pageTitle = getResources().getString(R.string.page_search_form);
                     break;
                 case PAGE_VIDEOS:
-                    pageTitle = Application.getInstance().getString(R.string.page_movie_list);
+                    pageTitle = getResources().getString(R.string.page_movie_list);
                     break;
                 default:
                     pageTitle = "";
@@ -164,22 +166,48 @@ public class MovieFun extends AppCompatActivity {
 
             return pageTitle;
         }
+
+        private String getFragmentTag(int position) {
+            switch (position) {
+                case PAGE_SEARCHES:
+                    return TAG_FRAGMENT_SEARCHES;
+                case PAGE_VIDEOS:
+                    return TAG_FRAGMENT_VIDEOS;
+                default:
+                    throw new UnsupportedOperationException("no fragment for position " + position);
+            }
+        }
     }
 
-    private interface ViewStrategy {
+    private ViewStrategy instantiateViewStrategy() {
+        ViewStrategy viewStrategy = null;
+        String type = (String) mContainer.getTag();
+
+        if (VIEW_CONVENIENT.equals(type)) {
+            viewStrategy = new ConvenientView();
+        }
+
+        if (VIEW_COMPACT.equals(type)) {
+            viewStrategy = new CompactView();
+        }
+
+        if (viewStrategy == null) {
+            throw new IllegalArgumentException("no tag with view type specified or not supported");
+        }
+
+        return viewStrategy;
+    }
+
+    protected interface ViewStrategy {
         void onCreate();
+
         void handleSearchEvent();
     }
 
-    private class ConvenientView implements ViewStrategy {
+    protected class ConvenientView implements ViewStrategy {
 
         @Override
         public void onCreate() {
-            mVideoList = new VideoList();
-            mSearchList = new SearchList();
-
-            mViewPager.setAdapter(new MoviePagerAdapter(getSupportFragmentManager()));
-
             mTabLayout.setupWithViewPager(mViewPager);
         }
 
@@ -189,14 +217,23 @@ public class MovieFun extends AppCompatActivity {
         }
     }
 
-    private class CompactView implements ViewStrategy {
+    protected class CompactView implements ViewStrategy {
+        @Bind(R.id.fg_search_list)
+        protected FrameLayout mSearchListFrameLayout;
+        @Bind(R.id.fg_video_list)
+        protected FrameLayout mVideoListFrameLayout;
 
         @Override
         public void onCreate() {
-            mVideoList = (VideoList) getSupportFragmentManager().
-                    findFragmentById(R.id.fg_video_list);
-            mSearchList = (SearchList) getSupportFragmentManager().
-                    findFragmentById(R.id.fg_search_list);
+            ButterKnife.bind(this, mContainer);
+
+            SearchList searchList = (SearchList) mFragmentManager.findFragmentByTag(
+                    TAG_FRAGMENT_SEARCHES);
+            searchList.setContainer(mSearchListFrameLayout);
+
+            VideoList videoList = (VideoList) mFragmentManager.findFragmentByTag(
+                    TAG_FRAGMENT_VIDEOS);
+            videoList.setContainer(mVideoListFrameLayout);
         }
 
         @Override

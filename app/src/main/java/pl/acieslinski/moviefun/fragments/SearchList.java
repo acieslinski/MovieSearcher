@@ -47,7 +47,7 @@ import pl.acieslinski.moviefun.utilities.SoftKeyboard;
  *         <acieslinski@gmail.com>
  */
 
-public class SearchList extends Fragment {
+public class SearchList extends PortableFragment {
     private static final int ANIMATION_INSERT_DURATION = 1000; // 1 second
 
     protected SearchForm mSearchForm;

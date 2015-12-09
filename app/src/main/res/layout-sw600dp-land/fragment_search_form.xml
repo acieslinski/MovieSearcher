@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_search"
+        android:hint="@string/hint_search"
+        style="@style/search_form_edittext"/>
+
+    <EditText
+        android:id="@+id/et_year"
+        android:hint="@string/hint_year"
+        style="@style/search_form_edittext"
+        android:inputType="number"/>
+
+    <pl.acieslinski.moviefun.views.TypeSpinner
+        android:id="@+id/sp_type"
+        style="@style/search_form_spinner"/>
+
+    <Button
+        android:id="@+id/btn_search"
+        android:text="@string/label_search"
+        style="@style/search_form_button"/>
+
+</LinearLayout>
