@@ -56,6 +56,8 @@ import rx.schedulers.Schedulers;
  */
 
 public class VideoList extends PortableFragment {
+    private static final String ARG_SEARCH = "arg-search";
+
     @Bind(R.id.rv_movies)
     protected EmptyRecyclerView mRecyclerView;
     @Bind(R.id.tv_empty_list)
@@ -66,6 +68,16 @@ public class VideoList extends PortableFragment {
 
     protected VideosAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
+
+    public static VideoList newInstance(Search search) {
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_SEARCH, search);
+
+        VideoList videoList = new VideoList();
+        videoList.setArguments(args);
+
+        return videoList;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
