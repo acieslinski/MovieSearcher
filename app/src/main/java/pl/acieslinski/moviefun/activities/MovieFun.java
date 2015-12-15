@@ -24,21 +24,21 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.greenrobot.event.EventBus;
-import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.fragments.SearchList;
 import pl.acieslinski.moviefun.fragments.VideoList;
+import pl.acieslinski.moviefun.models.Search;
 import pl.acieslinski.moviefun.models.SearchEvent;
+
+import static android.view.ViewGroup.LayoutParams;
 
 /**
  * @author Arkadiusz Cieśliński 14.11.15.
@@ -50,9 +50,6 @@ public class MovieFun extends AppCompatActivity {
     private static final int PAGE_SEARCHES = 0;
     private static final String VIEW_CONVENIENT = "convenient-view";
     private static final String VIEW_COMPACT = "compact-view";
-    private static final String TAG_FRAGMENT_SEARCHES = "search-list";
-    private static final String TAG_FRAGMENT_VIDEOS = "video-list";
-
 
     @Bind(R.id.fl_container)
     protected FrameLayout mContainer;
@@ -67,6 +64,7 @@ public class MovieFun extends AppCompatActivity {
 
     private ViewStrategy mViewStrategy;
     private FragmentManager mFragmentManager;
+    private MoviePagerAdapter mMoviePagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +79,9 @@ public class MovieFun extends AppCompatActivity {
 
         mFragmentManager = getSupportFragmentManager();
 
-        mViewPager.setAdapter(new MoviePagerAdapter(getSupportFragmentManager()));
+        mMoviePagerAdapter = new MoviePagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mMoviePagerAdapter);
+
 
         mViewStrategy = instantiateViewStrategy();
 
@@ -97,11 +97,10 @@ public class MovieFun extends AppCompatActivity {
 
 
     public void onEventMainThread(SearchEvent searchEvent) {
-        mViewStrategy.handleSearchEvent();
+        mViewStrategy.handleSearchEvent(searchEvent.getSearch());
     }
 
     private class MoviePagerAdapter extends FragmentPagerAdapter {
-
         public MoviePagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -117,34 +116,14 @@ public class MovieFun extends AppCompatActivity {
 
             switch (position) {
                 case PAGE_SEARCHES:
-                    fragment = new SearchList();
+                    fragment = FragmentAdapter.newInstance(new SearchList(), R.id.pageLeft);
                     break;
                 case PAGE_VIDEOS:
-                    fragment = new VideoList();
+                    fragment = FragmentAdapter.newInstance(new VideoList(), R.id.pageRight);
                     break;
                 default:
-                    fragment = new Fragment();
+                    throw new UnsupportedOperationException("position " + position);
             }
-
-            return fragment;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            FragmentTransaction transaction = mFragmentManager.beginTransaction();
-
-            String tag = getFragmentTag(position);
-
-            Fragment fragment = mFragmentManager.findFragmentByTag(tag);
-
-            if (fragment != null) {
-                transaction.attach(fragment);
-            } else {
-                fragment = getItem(position);
-                transaction.add(container.getId(), fragment, tag);
-            }
-
-            transaction.commit();
 
             return fragment;
         }
@@ -161,20 +140,70 @@ public class MovieFun extends AppCompatActivity {
                     pageTitle = getResources().getString(R.string.page_movie_list);
                     break;
                 default:
-                    pageTitle = "";
+                    throw new UnsupportedOperationException("position " + position);
             }
 
             return pageTitle;
         }
 
-        private String getFragmentTag(int position) {
-            switch (position) {
-                case PAGE_SEARCHES:
-                    return TAG_FRAGMENT_SEARCHES;
-                case PAGE_VIDEOS:
-                    return TAG_FRAGMENT_VIDEOS;
-                default:
-                    throw new UnsupportedOperationException("no fragment for position " + position);
+        public void replace(SearchList searchList) {
+            FragmentTransaction transaction = mFragmentManager.beginTransaction();
+            transaction.replace(R.id.pageLeft, searchList);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+
+        public void replace(VideoList videoList) {
+            FragmentTransaction transaction = mFragmentManager.beginTransaction();
+            transaction.replace(R.id.pageRight, videoList);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+    }
+
+    public static class FragmentAdapter extends Fragment {
+        private static final String TAG_FRAGMENT_ID = "id";
+
+        @Nullable
+        private Fragment mFragment;
+
+        public static FragmentAdapter newInstance(Fragment fragment, int id) {
+            FragmentAdapter fragmentAdapter = new FragmentAdapter();
+            fragmentAdapter.mFragment = fragment;
+
+            Bundle bundle = new Bundle();
+            bundle.putInt(TAG_FRAGMENT_ID, id);
+
+            fragmentAdapter.setArguments(bundle);
+
+            return fragmentAdapter;
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                                 @Nullable Bundle savedInstanceState) {
+            FrameLayout frameLayout = new FrameLayout(getContext());
+            frameLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+                    LayoutParams.MATCH_PARENT));
+
+            int id = getArguments().getInt(TAG_FRAGMENT_ID);
+            frameLayout.setId(id);
+
+            return frameLayout;
+        }
+
+        @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+
+            int id = getArguments().getInt(TAG_FRAGMENT_ID);
+
+            if (mFragment != null) {
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(id, mFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
         }
     }
@@ -201,7 +230,7 @@ public class MovieFun extends AppCompatActivity {
     protected interface ViewStrategy {
         void onCreate();
 
-        void handleSearchEvent();
+        void handleSearchEvent(Search search);
     }
 
     protected class ConvenientView implements ViewStrategy {
@@ -212,8 +241,10 @@ public class MovieFun extends AppCompatActivity {
         }
 
         @Override
-        public void handleSearchEvent() {
+        public void handleSearchEvent(Search search) {
             mViewPager.setCurrentItem(PAGE_VIDEOS);
+
+            mMoviePagerAdapter.replace(VideoList.newInstance(search));
         }
     }
 
@@ -227,18 +258,20 @@ public class MovieFun extends AppCompatActivity {
         public void onCreate() {
             ButterKnife.bind(this, mContainer);
 
-            SearchList searchList = (SearchList) mFragmentManager.findFragmentByTag(
-                    TAG_FRAGMENT_SEARCHES);
+            SearchList searchList = (SearchList) mFragmentManager.findFragmentById(R.id.pageLeft);
             searchList.setContainer(mSearchListFrameLayout);
 
-            VideoList videoList = (VideoList) mFragmentManager.findFragmentByTag(
-                    TAG_FRAGMENT_VIDEOS);
+            VideoList videoList = (VideoList) mFragmentManager.findFragmentById(R.id.pageRight);
             videoList.setContainer(mVideoListFrameLayout);
         }
 
         @Override
-        public void handleSearchEvent() {
-            // do nothing
+        public void handleSearchEvent(Search search) {
+            mMoviePagerAdapter.replace(VideoList.newInstance(search));
+            mFragmentManager.executePendingTransactions();
+
+            VideoList videoList = (VideoList) mFragmentManager.findFragmentById(R.id.pageRight);
+            videoList.setContainer(mVideoListFrameLayout);
         }
     }
 }

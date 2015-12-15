@@ -19,7 +19,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,12 +35,10 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.connection.ApiAdapter;
 import pl.acieslinski.moviefun.models.Search;
-import pl.acieslinski.moviefun.models.SearchEvent;
 import pl.acieslinski.moviefun.models.Video;
 import pl.acieslinski.moviefun.views.EmptyRecyclerView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -111,6 +108,14 @@ public class VideoList extends PortableFragment {
 
         mRecyclerView.setAdapter(mAdapter);
 
+        if (getArguments() != null) {
+            Search search = getArguments().getParcelable(ARG_SEARCH);
+
+            if (search != null) {
+                search(search);
+            }
+        }
+
         if (isLoadingState) {
             mProgressDialog.show();
         }
@@ -124,8 +129,6 @@ public class VideoList extends PortableFragment {
         mProgressDialog.setMessage(getResources().getString(R.string.message_loader));
         mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.setIndeterminate(true);
-
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -133,13 +136,9 @@ public class VideoList extends PortableFragment {
         super.onDetach();
 
         mProgressDialog = null;
-
-        EventBus.getDefault().unregister(this);
     }
 
-    public void onEventMainThread(SearchEvent searchEvent) {
-        Search search = searchEvent.getSearch();
-
+    public void search(Search search) {
         if (isAdded()) {
             ApiAdapter apiAdapter = new ApiAdapter(getActivity());
 
