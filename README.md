@@ -13,7 +13,9 @@ responsive.
 
 ## Demo
 
-![search videos](./gifs/search-videos.gif)
+![search videos](./gifs/mobile-portrait.gif)
+
+![search videos](./gifs/mobile-land.gif)
 
 ## Dependencies
 
