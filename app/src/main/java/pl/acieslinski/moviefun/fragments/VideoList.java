@@ -108,7 +108,8 @@ public class VideoList extends PortableFragment {
 
         mRecyclerView.setAdapter(mAdapter);
 
-        if (getArguments() != null) {
+        // if arguments has been provided and adapter is empty then fetch videos
+        if (getArguments() != null && mAdapter.getItemCount() == 0) {
             Search search = getArguments().getParcelable(ARG_SEARCH);
 
             if (search != null) {
@@ -144,6 +145,7 @@ public class VideoList extends PortableFragment {
 
             isLoadingState = true;
             if (null != mProgressDialog) {
+                // TODO fix E/WindowManager﹕ android.view.WindowLeaked:
                 mProgressDialog.show();
             }
 

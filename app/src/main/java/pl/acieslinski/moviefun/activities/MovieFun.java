@@ -202,7 +202,6 @@ public class MovieFun extends AppCompatActivity {
             if (mFragment != null) {
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(id, mFragment);
-                transaction.addToBackStack(null);
                 transaction.commit();
             }
         }
@@ -244,7 +243,9 @@ public class MovieFun extends AppCompatActivity {
         public void handleSearchEvent(Search search) {
             mViewPager.setCurrentItem(PAGE_VIDEOS);
 
+            //mMoviePagerAdapter.replace(SearchList.newInstance(search));
             mMoviePagerAdapter.replace(VideoList.newInstance(search));
+
         }
     }
 

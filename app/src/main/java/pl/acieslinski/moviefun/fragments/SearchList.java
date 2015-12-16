@@ -47,7 +47,7 @@ import pl.acieslinski.moviefun.utilities.SoftKeyboard;
  */
 
 public class SearchList extends PortableFragment {
-    private static final int ANIMATION_INSERT_DURATION = 1000; // 1 second
+    private static final int ANIMATION_INSERT_DURATION = 1000; // in millis
 
     protected SearchForm mSearchForm;
     @Bind(R.id.ll_container)
