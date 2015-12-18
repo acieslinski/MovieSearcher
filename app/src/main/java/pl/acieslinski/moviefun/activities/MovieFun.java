@@ -92,6 +92,7 @@ public class MovieFun extends AppCompatActivity {
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
 
+        // strategy is available from creation of the activity
         if (mViewStrategy != null) {
             mViewStrategy.onAttachFragment(fragment);
         }
@@ -270,6 +271,7 @@ public class MovieFun extends AppCompatActivity {
             ButterKnife.bind(this, mContainer);
 
             if (savedInstanceState != null) {
+                // pin the fragments to the containers after orientation change
                 Fragment pageLeft = getSupportFragmentManager().findFragmentById(R.id.pageLeft);
                 onAttachFragment(pageLeft);
                 Fragment pageRight = getSupportFragmentManager().findFragmentById(R.id.pageRight);
@@ -290,6 +292,7 @@ public class MovieFun extends AppCompatActivity {
             }
 
             if (mSearchListHasBeenAttached && mVideoListHasBeenAttached) {
+                // hide the view pager after all needed fragments had been pinned to the containers
                 mViewPager.setVisibility(View.GONE);
             }
         }
