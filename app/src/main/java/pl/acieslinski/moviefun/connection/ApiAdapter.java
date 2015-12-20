@@ -125,31 +125,26 @@ public class ApiAdapter {
      */
     private void loadPoster(final Video video, final Subscriber<? super Video> subscriber,
                             final CountDownLatch loaderLatch) {
-        sExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Picasso
-                        .with(Application.getInstance().getApplicationContext())
-                        .load(video.getPosterLink())
-                        .fetch(new com.squareup.picasso.Callback() {
-                            @Override
-                            public void onSuccess() {
-                                onTerminated();
-                                video.setIsPosterAvailable(true);
-                            }
+        sExecutor.execute(() -> Picasso
+                .with(Application.getInstance().getApplicationContext())
+                .load(video.getPosterLink())
+                .fetch(new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        onTerminated();
+                        video.setIsPosterAvailable(true);
+                    }
 
-                            @Override
-                            public void onError() {
-                                // poster for this video is not available - ignore it
-                                onTerminated();
-                            }
+                    @Override
+                    public void onError() {
+                        // poster for this video is not available - ignore it
+                        onTerminated();
+                    }
 
-                            public void onTerminated() {
-                                subscriber.onNext(video);
-                                loaderLatch.countDown();
-                            }
-                        });
-            }
-        });
+                    public void onTerminated() {
+                        subscriber.onNext(video);
+                        loaderLatch.countDown();
+                    }
+                }));
     }
 }

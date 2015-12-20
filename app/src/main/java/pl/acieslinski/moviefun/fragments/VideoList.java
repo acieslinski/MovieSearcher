@@ -154,26 +154,13 @@ public class VideoList extends PortableFragment {
             apiAdapter.searchMovies(search)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.newThread())
-                    .filter(new Func1<Video, Boolean>() {
-                        @Override
-                        public Boolean call(Video video) {
-                            return video.isPosterAvailable();
+                    .filter(video -> video.isPosterAvailable())
+                    .doOnNext(video -> mAdapter.add(video))
+                    .doOnCompleted(() -> {
+                        if (null != mProgressDialog) {
+                            mProgressDialog.hide();
                         }
-                    })
-                    .doOnNext(new Action1<Video>() {
-                        @Override
-                        public void call(Video video) {
-                            mAdapter.add(video);
-                        }
-                    })
-                    .doOnCompleted(new Action0() {
-                        @Override
-                        public void call() {
-                            if (null != mProgressDialog) {
-                                mProgressDialog.hide();
-                            }
-                            isLoadingState = false;
-                        }
+                        isLoadingState = false;
                     })
                     .subscribe();
         }
@@ -184,10 +171,6 @@ public class VideoList extends PortableFragment {
 
         public VideosAdapter() {
             mVideos = new ArrayList();
-        }
-
-        public VideosAdapter(List<Video> videos) {
-            mVideos = videos;
         }
 
         @Override

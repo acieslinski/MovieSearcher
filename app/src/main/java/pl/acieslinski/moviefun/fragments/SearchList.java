@@ -107,12 +107,8 @@ public class SearchList extends PortableFragment {
                             mLayoutManager.smoothScrollToPosition(mSearchesRecyclerView, null, 0);
                             mAdapter.insert(search, 0);
 
-                            mSearchesRecyclerView.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    EventBus.getDefault().post(new SearchEvent(search));
-                                }
-                            }, ANIMATION_INSERT_DURATION);
+                            mSearchesRecyclerView.postDelayed(() -> EventBus.getDefault().post(
+                                    new SearchEvent(search)), ANIMATION_INSERT_DURATION);
                         } else {
                             EventBus.getDefault().post(new SearchEvent(search));
                         }
@@ -124,10 +120,6 @@ public class SearchList extends PortableFragment {
 
     protected class SearchesAdapter extends RecyclerView.Adapter<SearchesAdapter.ViewHolder> {
         private List<Search> mSearches;
-
-        public SearchesAdapter() {
-            mSearches = new ArrayList();
-        }
 
         public SearchesAdapter(List<Search> searches) {
             mSearches = searches;
@@ -156,12 +148,7 @@ public class SearchList extends PortableFragment {
             mSearches.add(position, search);
 
             if (isAdded()) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        notifyItemInserted(position);
-                    }
-                });
+                getActivity().runOnUiThread(() -> notifyItemInserted(position));
             }
         }
 
@@ -201,11 +188,8 @@ public class SearchList extends PortableFragment {
 
                 mDateTextView.setText(day + " " + capitalize(months[month]).substring(0, 3));
 
-                mSearchButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        EventBus.getDefault().post(new SearchEvent(search));
-                    }
+                mSearchButton.setOnClickListener((View v) -> {
+                    EventBus.getDefault().post(new SearchEvent(search));
                 });
             }
 
