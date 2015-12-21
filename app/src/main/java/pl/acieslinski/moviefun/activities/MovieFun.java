@@ -105,6 +105,12 @@ public class MovieFun extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        mViewStrategy.onBackPressed();
+    }
 
     public void onEventMainThread(SearchEvent searchEvent) {
         mViewStrategy.handleSearchEvent(searchEvent.getSearch());
@@ -235,6 +241,8 @@ public class MovieFun extends AppCompatActivity {
         void handleSearchEvent(Search search);
 
         void onAttachFragment(Fragment fragment);
+
+        void onBackPressed();
     }
 
     protected class ConvenientView implements ViewStrategy {
@@ -255,6 +263,11 @@ public class MovieFun extends AppCompatActivity {
         public void onAttachFragment(Fragment fragment) {
             // do nothing
         }
+
+        @Override
+        public void onBackPressed() {
+            // do nothing
+        }
     }
 
     protected class CompactView implements ViewStrategy {
@@ -271,11 +284,8 @@ public class MovieFun extends AppCompatActivity {
             ButterKnife.bind(this, mContainer);
 
             if (savedInstanceState != null) {
-                // pin the fragments to the containers after orientation change
-                Fragment pageLeft = getSupportFragmentManager().findFragmentById(R.id.pageLeft);
-                onAttachFragment(pageLeft);
-                Fragment pageRight = getSupportFragmentManager().findFragmentById(R.id.pageRight);
-                onAttachFragment(pageRight);
+                // if configuration changed
+                pinFragments();
             }
         }
 
@@ -299,8 +309,26 @@ public class MovieFun extends AppCompatActivity {
 
         @Override
         public void handleSearchEvent(Search search) {
+            // after replacing the video list fragment the onAttachFragment will be called
             mMoviePagerAdapter.replace(VideoList.newInstance(search));
-            mFragmentManager.executePendingTransactions();
+        }
+
+        @Override
+        public void onBackPressed() {
+            pinFragments();
+        }
+
+        /**
+         * Pins the fragments to the containers.
+         */
+        private void pinFragments() {
+            mSearchListFrameLayout.removeAllViews();
+            Fragment pageLeft = getSupportFragmentManager().findFragmentById(R.id.pageLeft);
+            onAttachFragment(pageLeft);
+
+            mVideoListFrameLayout.removeAllViews();
+            Fragment pageRight = getSupportFragmentManager().findFragmentById(R.id.pageRight);
+            onAttachFragment(pageRight);
         }
     }
 }

@@ -54,9 +54,10 @@ public abstract class PortableFragment extends Fragment {
 
             if (parent != null) {
                 parent.removeView(view);
-                container.addView(view);
                 changed = true;
             }
+
+            container.addView(view);
         }
 
         return  changed;
