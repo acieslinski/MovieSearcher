@@ -77,6 +77,16 @@ public class VideoList extends PortableFragment {
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        mProgressDialog = new ProgressDialog(context);
+        mProgressDialog.setMessage(getResources().getString(R.string.message_loader));
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setIndeterminate(true);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -122,16 +132,6 @@ public class VideoList extends PortableFragment {
         if (isLoadingState) {
             mProgressDialog.show();
         }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        mProgressDialog = new ProgressDialog(context);
-        mProgressDialog.setMessage(getResources().getString(R.string.message_loader));
-        mProgressDialog.setCanceledOnTouchOutside(false);
-        mProgressDialog.setIndeterminate(true);
     }
 
     @Override
