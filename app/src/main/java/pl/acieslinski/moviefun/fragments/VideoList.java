@@ -87,7 +87,8 @@ public class VideoList extends PortableFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_video_list, container, false);
     }
 
@@ -117,6 +118,7 @@ public class VideoList extends PortableFragment {
             }
         }
 
+        // restore state of the progress dialog (orientation change)
         if (isLoadingState) {
             mProgressDialog.show();
         }
