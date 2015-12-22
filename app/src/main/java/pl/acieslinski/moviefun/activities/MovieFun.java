@@ -229,7 +229,7 @@ public class MovieFun extends AppCompatActivity {
         }
 
         if (viewStrategy == null) {
-            throw new IllegalArgumentException("no tag with view type specified or not supported");
+            throw new IllegalArgumentException("tag for view type is absent or not supported");
         }
 
         return viewStrategy;

@@ -136,7 +136,7 @@ public class VideoList extends PortableFragment {
     public void onDetach() {
         super.onDetach();
 
-        mProgressDialog = null;
+        mProgressDialog.dismiss();
     }
 
     public void search(Search search) {
@@ -145,7 +145,6 @@ public class VideoList extends PortableFragment {
 
             isLoadingState = true;
             if (null != mProgressDialog) {
-                // TODO fix E/WindowManager﹕ android.view.WindowLeaked:
                 mProgressDialog.show();
             }
 
