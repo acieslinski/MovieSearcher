@@ -297,6 +297,8 @@ public class MovieFun extends AppCompatActivity {
             }
 
             if (fragment instanceof VideoList) {
+                // clear current view with videos - needed when replacing the fragment
+                mVideoListFrameLayout.removeAllViews();
                 ((VideoList) fragment).setContainer(mVideoListFrameLayout);
                 mVideoListHasBeenAttached = true;
             }
