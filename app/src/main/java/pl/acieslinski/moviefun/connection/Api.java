@@ -27,8 +27,6 @@ import retrofit.http.Query;
  *
  * @author Arkadiusz Cieśliński
  *         <acieslinski@gmail.com>
- *         <arkadiusz.cieslinski@partners.mbank.pl>
- *         <ZEW_2_9597>
  */
 
 public interface Api {
