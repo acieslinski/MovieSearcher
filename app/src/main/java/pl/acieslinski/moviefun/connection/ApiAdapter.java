@@ -38,8 +38,6 @@ import rx.Subscriber;
  *
  * @author Arkadiusz Cieśliński
  *         <acieslinski@gmail.com>
- *         <arkadiusz.cieslinski@partners.mbank.pl>
- *         <ZEW_2_9597>
  */
 
 public class ApiAdapter {

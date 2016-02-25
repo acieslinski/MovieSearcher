@@ -34,8 +34,6 @@ import pl.acieslinski.moviefun.models.Search;
 /**
  * @author Arkadiusz Cieśliński
  *         <acieslinski@gmail.com>
- *         <arkadiusz.cieslinski@partners.mbank.pl>
- *         <ZEW_2_9597>
  */
 public class DatabaseManager extends OrmLiteSqliteOpenHelper {
     private static final String TAG = DatabaseManager.class.getSimpleName();
