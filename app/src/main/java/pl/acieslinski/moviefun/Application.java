@@ -14,6 +14,7 @@
 
 package pl.acieslinski.moviefun;
 
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import pl.acieslinski.moviefun.managers.ApiManager;
@@ -29,7 +30,7 @@ public class Application extends android.app.Application {
     protected static Application sInstance;
 
     private DatabaseManager mDatabaseManager;
-    private ApiManager mApiManager;
+    protected ApiManager mApiManager;
 
     @Override
     public void onCreate() {
@@ -49,7 +50,18 @@ public class Application extends android.app.Application {
     public DatabaseManager getDatabaseManager() {
         return mDatabaseManager;
     }
+
     public ApiManager getApiManager() {
         return mApiManager;
+    }
+
+    @VisibleForTesting
+    public void injectApiManager(ApiManager apiManager) {
+        mApiManager = apiManager;
+    }
+
+    @VisibleForTesting
+    public void injectDatabaseManager(DatabaseManager databaseManager) {
+        mDatabaseManager = databaseManager;
     }
 }

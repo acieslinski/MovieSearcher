@@ -24,6 +24,7 @@ import com.j256.ormlite.field.DatabaseField;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.Objects;
 
 import pl.acieslinski.moviefun.ApplicationContract;
 
@@ -128,10 +129,6 @@ public class Search implements Parcelable {
     @Nullable
     public Date getDate() {
         return mDate;
-    }
-
-    public void setDate(Date date) {
-        mDate = date;
     }
 
     @Override
