@@ -129,12 +129,14 @@ public class ApiAdapter {
                 .fetch(new com.squareup.picasso.Callback() {
                     @Override
                     public void onSuccess() {
+                        Log.i(TAG, "loadPoster: success");
                         onTerminated();
                         video.setIsPosterAvailable(true);
                     }
 
                     @Override
                     public void onError() {
+                        Log.i(TAG, "loadPoster: error");
                         // poster for this video is not available - ignore it
                         onTerminated();
                     }

@@ -109,4 +109,8 @@ public class DatabaseManager extends OrmLiteSqliteOpenHelper {
 
         return saved;
     }
+
+    public void truncate() throws SQLException {
+        TableUtils.clearTable(connectionSource, Search.class);
+    }
 }
