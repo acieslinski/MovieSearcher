@@ -19,7 +19,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -38,16 +37,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
-import pl.acieslinski.moviefun.connection.ApiAdapter;
 import pl.acieslinski.moviefun.managers.ApiManager;
 import pl.acieslinski.moviefun.models.Search;
 import pl.acieslinski.moviefun.models.Video;
 import pl.acieslinski.moviefun.views.EmptyRecyclerView;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * @author Arkadiusz Cieśliński 14.11.15.

@@ -1,35 +1,20 @@
 package pl.acieslinski.moviefun.managers;
 
-import android.widget.Button;
-import android.widget.EditText;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
-import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.BuildConfig;
-import pl.acieslinski.moviefun.R;
-import pl.acieslinski.moviefun.activities.MovieFun;
-import pl.acieslinski.moviefun.fragments.SearchList;
-import pl.acieslinski.moviefun.fragments.VideoList;
 import pl.acieslinski.moviefun.models.Search;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 /**
  * @author Arkadiusz Cieśliński 26.03.16.

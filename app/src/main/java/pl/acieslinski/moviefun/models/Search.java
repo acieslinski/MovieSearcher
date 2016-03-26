@@ -24,7 +24,6 @@ import com.j256.ormlite.field.DatabaseField;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
-import java.util.Objects;
 
 import pl.acieslinski.moviefun.ApplicationContract;
 
