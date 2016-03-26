@@ -1,64 +1,35 @@
 package pl.acieslinski.moviefun.activities;
 
-import android.app.Activity;
-import android.provider.ContactsContract;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
-import org.apache.http.HttpRequest;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.tools.ant.taskdefs.condition.Http;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
-import org.robolectric.shadows.httpclient.FakeHttp;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.HttpUrl;
-import okhttp3.mockwebserver.MockWebServer;
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.BuildConfig;
 import pl.acieslinski.moviefun.R;
-import pl.acieslinski.moviefun.connection.ApiAdapter;
 import pl.acieslinski.moviefun.fragments.SearchList;
 import pl.acieslinski.moviefun.fragments.VideoList;
 import pl.acieslinski.moviefun.managers.ApiManager;
 import pl.acieslinski.moviefun.managers.DatabaseManager;
 import pl.acieslinski.moviefun.models.Search;
-import rx.Scheduler;
-import rx.Subscription;
-import rx.functions.Action0;
-import rx.internal.schedulers.ScheduledAction;
-import rx.plugins.RxJavaPlugins;
-import rx.plugins.RxJavaSchedulersHook;
-
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Arkadiusz Cieśliński 24.03.16.
