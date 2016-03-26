@@ -3,6 +3,7 @@ package pl.acieslinski.moviefun.activities;
 import android.app.Activity;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,7 +68,6 @@ import static org.mockito.Mockito.when;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk=21, packageName = "pl.acieslinski.moviefun")
 public class MovieFunIntegrationTest  {
-    private static final ExecutorService sExecutor = Executors.newSingleThreadExecutor();
     MovieFun mMovieFun;
     SearchList mSearchList;
     VideoList mVideoList;
@@ -115,23 +115,26 @@ public class MovieFunIntegrationTest  {
         verify(apiManager).fetchMovies(searchForApi.capture(), anyObject());
 
         assertNotNull(searchForApi.getValue());
-        assertEquals(searchForApi.getValue().getSearch(), searchTestPhrase);
-        assertEquals(searchForApi.getValue().getYear(), yearTestPhrase);
+        assertEquals(searchTestPhrase, searchForApi.getValue().getSearch());
+        assertEquals(yearTestPhrase, searchForApi.getValue().getYear());
 
         // assert if save for search called properly
         ArgumentCaptor<Search> searchForDatabase = ArgumentCaptor.forClass(Search.class);
         verify(databaseManager).saveSearch(searchForDatabase.capture());
 
         assertNotNull(searchForDatabase.getValue());
-        assertEquals(searchForDatabase.getValue().getSearch(), searchTestPhrase);
-        assertEquals(searchForDatabase.getValue().getYear(), yearTestPhrase);
+        assertEquals(searchTestPhrase, searchForDatabase.getValue().getSearch());
+        assertEquals(yearTestPhrase, searchForDatabase.getValue().getYear());
     }
+
+    // TODO variations of the sendingSearchQueryTest
 
     /**
      * Attaches the {@link VideoList} to the provided activity for the test purposes.
      *
-     * Since the fragments and the activity can work independently we can add them anywhere, where
-     * the activity could find them.
+     * Since the {@link Robolectric} has problems with attaching the {@link VideoList}
+     * by the {@link ViewPager} we have to do it "manually". The {@link VideoList} will be
+     * added to the main container of the {@link MovieFun}
      */
     private void attachVideoContainer(MovieFun movieFun, VideoList videoList) {
         FrameLayout frameLayout = new FrameLayout(mMovieFun);
