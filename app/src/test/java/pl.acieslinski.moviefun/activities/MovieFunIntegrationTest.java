@@ -20,9 +20,14 @@ import org.robolectric.shadows.ShadowLog;
 import org.robolectric.shadows.httpclient.FakeHttp;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockWebServer;
 import pl.acieslinski.moviefun.BuildConfig;
 import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.fragments.SearchList;
@@ -46,6 +51,7 @@ import static org.junit.Assert.assertThat;
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk=21, packageName = "pl.acieslinski.moviefun")
 public class MovieFunIntegrationTest  {
+    private static final ExecutorService sExecutor = Executors.newSingleThreadExecutor();
     MovieFun mMovieFun;
     SearchList mSearchList;
     VideoList mVideoList;
@@ -63,11 +69,11 @@ public class MovieFunIntegrationTest  {
         // Robolectric ViewPager issue with attaching fragments
         attachVideoContainer(mMovieFun, mVideoList);
 
-        RxJavaPlugins.getInstance().registerSchedulersHook(new RobolectricRxJavaSchedulersHook());
+//        RxJavaPlugins.getInstance().registerSchedulersHook(new RobolectricRxJavaSchedulersHook());
     }
 
     @Test
-    public void sendingSearchQueryTest() throws InterruptedException {
+    public void sendingSearchQueryTest() throws Exception {
         EditText editText = (EditText) mSearchList.getView().findViewById(R.id.et_search);
         Button button = (Button) mSearchList.getView().findViewById(R.id.btn_search);
 
@@ -76,9 +82,14 @@ public class MovieFunIntegrationTest  {
 
         Robolectric.flushForegroundThreadScheduler();
 
-        HttpRequest httpRequest = FakeHttp.getLatestSentHttpRequest();
+//        sExecutor.awaitTermination(20000, TimeUnit.MILLISECONDS);
 
-        httpRequest.getParams();
+        Thread.sleep(20000);
+//        MockWebServer mockWebServer = new MockWebServer();
+//
+//        mockWebServer.start();
+//
+//        HttpUrl httpUrl = mockWebServer.url("/");
     }
 
     /**
@@ -117,7 +128,7 @@ public class MovieFunIntegrationTest  {
                 public Subscription schedule(Action0 action) {
                     ScheduledAction scheduledAction = new ScheduledAction(action);
 
-                    Robolectric.getBackgroundThreadScheduler().post(() -> {
+                    sExecutor.execute(() -> {
                         scheduledAction.run();
                         scheduledAction.unsubscribe();
                     });

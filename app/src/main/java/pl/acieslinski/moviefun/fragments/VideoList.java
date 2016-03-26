@@ -39,6 +39,7 @@ import butterknife.ButterKnife;
 import pl.acieslinski.moviefun.Application;
 import pl.acieslinski.moviefun.R;
 import pl.acieslinski.moviefun.connection.ApiAdapter;
+import pl.acieslinski.moviefun.managers.ApiManager;
 import pl.acieslinski.moviefun.models.Search;
 import pl.acieslinski.moviefun.models.Video;
 import pl.acieslinski.moviefun.views.EmptyRecyclerView;
@@ -144,27 +145,42 @@ public class VideoList extends PortableFragment {
 
     public void search(Search search) {
         if (isAdded()) {
-            ApiAdapter apiAdapter = new ApiAdapter(getActivity());
-
-            isLoadingState = true;
-            if (null != mProgressDialog) {
-                mProgressDialog.show();
-            }
+            showProgressDialog();
 
             mAdapter.clear();
 
-            apiAdapter.searchMovies(search)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.newThread())
-                    .filter(video -> video.isPosterAvailable())
-                    .doOnNext(video -> mAdapter.add(video))
-                    .doOnCompleted(() -> {
-                        if (null != mProgressDialog) {
-                            mProgressDialog.hide();
+            Application.getInstance().getApiManager().fetchMovies(search,
+                    new ApiManager.MoviesCallback() {
+                        @Override
+                        public void onVideo(Video video) {
+                            mAdapter.add(video);
                         }
-                        isLoadingState = false;
-                    })
-                    .subscribe();
+
+                        @Override
+                        public void onCompleted() {
+                            hideProgressDialog();
+                        }
+
+                        @Override
+                        public void onError(Throwable error) {
+                            hideProgressDialog();
+                            // TODO indicate the failure
+                        }
+                    });
+        }
+    }
+
+    private void hideProgressDialog() {
+        if (null != mProgressDialog) {
+            mProgressDialog.hide();
+        }
+        isLoadingState = false;
+    }
+
+    private void showProgressDialog() {
+        isLoadingState = true;
+        if (null != mProgressDialog) {
+            mProgressDialog.show();
         }
     }
 
