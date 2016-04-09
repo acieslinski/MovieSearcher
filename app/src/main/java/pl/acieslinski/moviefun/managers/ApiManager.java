@@ -5,6 +5,7 @@ import android.content.Context;
 import pl.acieslinski.moviefun.connection.ApiAdapter;
 import pl.acieslinski.moviefun.models.Search;
 import pl.acieslinski.moviefun.models.Video;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -31,9 +32,22 @@ public class ApiManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
                 .filter(video -> video.isPosterAvailable())
-                .doOnNext(video -> callback.onVideo(video))
-                .doOnCompleted(() -> callback.onCompleted())
-                .doOnError((error) -> callback.onError(error))
-                .subscribe();
+                // must be this way - https://github.com/square/retrofit/issues/1214
+                .subscribe(new Subscriber<Video>() {
+                    @Override
+                    public void onCompleted() {
+                        callback.onCompleted();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onError(e);
+                    }
+
+                    @Override
+                    public void onNext(Video video) {
+                        callback.onVideo(video);
+                    }
+                });
     }
 }
